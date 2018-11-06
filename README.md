@@ -110,6 +110,7 @@ RetryProducerDemon:
                 try_count=task.try_count + 1,
                 to_try_time=now() + f(log(task.try_count + 1))
             ) -> postgres
+        delete_sent_retries(tasks) -> postgres
 
         sleep(_delay)
 
