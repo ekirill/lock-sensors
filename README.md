@@ -98,7 +98,7 @@ Endpoints , связанные с историей читают данные и�
 
 RetryProducerDemon:
     while true:
-        get_failed(try_count<10, to_try_time>=now()) -> tasks[:1000]
+        get_failed(try_count<10, to_try_time<=now()) -> tasks[:1000]
         for task in tasks:
             push_notify_task(task.client, task.sensor_id, task.message) -> rabbitmq
             set_next_retry_time(
