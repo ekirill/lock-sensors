@@ -1,0 +1,39 @@
+version: '3.6'
+
+services:
+    rabbit:
+        build:
+            context: docker/rabbit/
+            dockerfile: Dockerfile
+        hostname: "ebrabbit"
+        environment:
+            - RABBITMQ_DEFAULT_USER=testuser
+            - RABBITMQ_DEFAULT_PASS=testuserpass
+            - RABBITMQ_DEFAULT_VHOST=vhost1
+        ports:
+            # rq console, use pass above
+            - "15672:15672"
+            # broker
+            - "5672:5672"
+        expose:
+            - "15672"
+            - "5672"
+    postgres:
+        build:
+            context: docker/postgres/
+            dockerfile: Dockerfile
+        environment:
+            POSTGRES_USER: sensors
+            POSTGRES_PASSWORD: mysecretpassword
+            POSTGRES_DB: sensors
+
+
+#    worker:
+#        build:
+#            context: .
+#            dockerfile: docker/notify/Dockerfile
+#        depends_on:
+#            - rabbit
+#        environment:
+#            - DEBUG=${DEBUG}
+#            - CELERY_BROKER_URL="amqp://testuser:testuserpass@rabbit:5672/vhost1"
