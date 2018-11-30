@@ -3,7 +3,7 @@ set -ex
 
 # Setup rabbit
 rabbitmq-server -detached
-sleep 10
+sleep 20
 
 # Create vhosts
 rabbitmqctl add_vhost vh_sensors
