@@ -15,30 +15,33 @@ _WORKER_ID = None
 
 def callback(ch, method, properties, body):
     print(f"[x] {_WORKER_ID} Received {body}")
-    task = json.loads(body)
-    time.sleep(task['data'])
-    print(f"[x] {_WORKER_ID} Done {task['sensor_id']}")
+    try:
+        task = json.loads(body)
+        time.sleep(task['data'])
+        print(f"[x] {_WORKER_ID} Done {task['sensor_id']}")
+    except (ValueError, TypeError) as e:
+        print(f"[!] {_WORKER_ID} ERROR {e}")
+    ch.basic_ack(delivery_tag=method.delivery_tag)
 
 
 def run_worker(worker_id):
     channel = None
+    global _WORKER_ID
+    _WORKER_ID = worker_id
 
     def _stop(signum, frame):
         print(f'[*] {_WORKER_ID} Got {signum} signal, stopping')
         if channel:
             channel.stop_consuming()
-            print(f'[*] {_WORKER_ID} Consumer stopped')
+            print(f'[*] {_WORKER_ID} Consumer stopped, waiting current task to complete')
 
     signal.signal(signal.SIGINT, _stop)
     signal.signal(signal.SIGTERM, _stop)
 
-    global _WORKER_ID
-    _WORKER_ID = worker_id
     with get_channel() as channel:
         channel.basic_consume(
             callback,
             queue=QUEUE_NAME,
-            no_ack=True
         )
         print(f'[*] {_WORKER_ID} Started.')
         channel.start_consuming()

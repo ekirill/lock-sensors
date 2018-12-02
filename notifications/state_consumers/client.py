@@ -5,7 +5,7 @@ import pika
 from pika.adapters.blocking_connection import BlockingChannel
 
 
-QUEUE_NAME = 'sensors'
+QUEUE_NAME = 'sensors-queue'
 
 
 class RabbitConfig(NamedTuple):
@@ -36,7 +36,8 @@ def get_channel() -> BlockingChannel:
         )
     )
     channel = connection.channel()
-    channel.queue_declare(queue=QUEUE_NAME)
+    channel.queue_declare(queue=QUEUE_NAME, durable=True)
+    channel.basic_qos(prefetch_count=1)
 
     yield channel
 
