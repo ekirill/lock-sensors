@@ -3,7 +3,7 @@ import multiprocessing
 import signal
 import time
 
-from state_consumers.client import get_channel, QUEUE_NAME
+from lock_sensors.state_consumers.client import get_channel, QUEUE_NAME
 
 
 POOL_SIZE = 2

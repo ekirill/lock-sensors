@@ -9,7 +9,6 @@ services:
         environment:
             - RABBITMQ_DEFAULT_USER=testuser
             - RABBITMQ_DEFAULT_PASS=testuserpass
-            - RABBITMQ_DEFAULT_VHOST=vhost1
         ports:
             # rq console, use pass above
             - "15672:15672"
@@ -20,12 +19,14 @@ services:
             - "5672"
     postgres:
         build:
-            context: docker/postgres/
-            dockerfile: Dockerfile
+            context: .
+            dockerfile: docker/postgres/Dockerfile
         environment:
             POSTGRES_USER: sensors
             POSTGRES_PASSWORD: mysecretpassword
             POSTGRES_DB: sensors
+        ports:
+            - "5432:5432"
 
 
 #    worker:

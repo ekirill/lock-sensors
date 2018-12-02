@@ -6,3 +6,6 @@ docker-up:
 
 docker-clean:
 	docker-compose down
+
+tests:
+	LOCK_SENSORS_TESTING=1 python -m lock_sensors.common.testing

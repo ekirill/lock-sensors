@@ -3,7 +3,7 @@ import random
 import time
 
 import pika
-from state_consumers.client import get_channel, QUEUE_NAME
+from lock_sensors.state_consumers.client import get_channel, QUEUE_NAME
 
 
 def get_message():
